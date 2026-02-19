@@ -71,3 +71,12 @@ micronaut {
 tasks.named("dockerfileNative") {
     jdkVersion = "21"
 }
+
+// Use GitHub Actions MySQL service in CI; disable Test Resources (Docker/Testcontainers)
+if (System.getenv("CI") != null) {
+    micronaut {
+        testResources {
+            enabled.set(false)
+        }
+    }
+}

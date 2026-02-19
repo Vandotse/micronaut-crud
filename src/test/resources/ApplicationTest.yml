@@ -1,5 +1,6 @@
-# Let Micronaut Test Resources provide MySQL via Testcontainers
-# (url, username, password are injected - do not set them)
 datasources:
   default:
-    db-type: mysql
+    url: jdbc:mysql://127.0.0.1:3306/mn_playground?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: password
+    driverClassName: com.mysql.cj.jdbc.Driver
