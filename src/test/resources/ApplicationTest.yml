@@ -1,6 +1,6 @@
 datasources:
   default:
-    url: jdbc:mysql://127.0.0.1:3306/mn_playground?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/mn_playground?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&connectTimeout=60000&socketTimeout=60000
     username: root
     password: password
     driverClassName: com.mysql.cj.jdbc.Driver
