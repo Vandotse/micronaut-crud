@@ -8,22 +8,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: mn_playground
-          MYSQL_ROOT_HOST: "%"
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -ppassword"
-          --health-interval=5s
-          --health-timeout=3s
-          --health-retries=30
-          --health-start-period=30s
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,20 +22,6 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.8"
-
-      - name: Wait for MySQL
-        run: |
-          sudo apt-get update && sudo apt-get install -y default-mysql-client
-          for i in $(seq 1 30); do
-            if mysqladmin ping -h 127.0.0.1 -u root -ppassword --silent 2>/dev/null; then
-              echo "MySQL is ready"
-              exit 0
-            fi
-            echo "Waiting for MySQL... ($i/30)"
-            sleep 2
-          done
-          echo "MySQL did not become ready"
-          exit 1
 
       - name: Build + Test + Shadow JAR
         run: gradle clean test shadowJar
