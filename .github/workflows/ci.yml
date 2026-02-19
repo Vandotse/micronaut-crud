@@ -1,0 +1,51 @@
+name: Build JAR + Test (main)
+
+on:
+  push:
+    branches: ["jdbc"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: mn_playground
+          MYSQL_ROOT_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -ppassword"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      MICRONAUT_DATASOURCES_DEFAULT_URL: jdbc:mysql://127.0.0.1:3306/mn_playground
+      MICRONAUT_DATASOURCES_DEFAULT_USERNAME: root
+      MICRONAUT_DATASOURCES_DEFAULT_PASSWORD: password
+      MICRONAUT_DATASOURCES_DEFAULT_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x ./gradlew
+
+      - name: Test + Build executable JAR
+        run: ./gradlew clean test shadowJar
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: jar
+          path: build/libs/*.jar
