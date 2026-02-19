@@ -1,4 +1,4 @@
-name: Java CI (Micronaut CRUD)
+name: Java CI
 
 on:
   push:
@@ -14,6 +14,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: mn_playground
+          MYSQL_ROOT_HOST: "%"
         ports:
           - 3306:3306
         options: >-
